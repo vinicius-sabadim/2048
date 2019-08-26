@@ -19,8 +19,7 @@ interface KeyboardEvent {
 const Game: React.FC = () => {
   const { cells, start } = React.useContext(GameContext)
 
-  const pressedKeyAction = (event: KeyboardEvent) => {
-    const { key } = event
+  const pressedKeyAction = ({ key }: KeyboardEvent) => {
     const keyAction = keys[key]
     if (keyAction) {
       console.log(keyAction)
