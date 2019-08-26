@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 
 import Game from '../components/Game'
 
@@ -14,5 +14,16 @@ describe('game', () => {
     )
     const filledCells = getAllByText(/2|4/)
     expect(filledCells.length).toBe(2)
+  })
+
+  test.skip('should have three spaces filled after an arrow key is pressed', () => {
+    const { getAllByText } = render(
+      <GameProvider>
+        <Game />
+      </GameProvider>
+    )
+    fireEvent.keyDown(window, { key: 'ArrowDown' })
+    const filledCells = getAllByText(/2|4/)
+    expect(filledCells.length).toBe(3)
   })
 })
