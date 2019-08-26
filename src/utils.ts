@@ -9,3 +9,7 @@ export function getAvailableSpace(cells: Cell[]): number {
 export function getRandomValue(random = Math.random()): number {
   return random > 0.1 ? 2 : 4
 }
+
+export function isGameOver(cells: Cell[]): boolean {
+  return cells.every(cell => cell.value !== 0)
+}
