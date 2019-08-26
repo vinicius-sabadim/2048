@@ -1,5 +1,26 @@
 import React from 'react'
 
-const Game: React.FC = () => <div>Game</div>
+import { Grid, Cell } from './styles'
+
+const Game: React.FC = () => (
+  <Grid>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+    <Cell>2</Cell>
+  </Grid>
+)
 
 export default Game
