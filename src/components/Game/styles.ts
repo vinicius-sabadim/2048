@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const Grid = styled.div`
-  background-color: #bbada0;
+  background-color: #aaaaaa;
   border-radius: 10px;
   display: grid;
   grid-template-rows: repeat(4, 120px);
@@ -12,9 +12,18 @@ export const Grid = styled.div`
   width: 550px;
 `
 
+interface CellProps {
+  value: number
+}
+
+function getColor(value: number): string {
+  if (value === 2) return 'cornsilk'
+  return '#ccc'
+}
+
 export const Cell = styled.div`
   align-items: center;
-  background-color: cornsilk;
+  background-color: ${(props: CellProps) => getColor(props.value)};
   border-radius: 5px;
   color: #555;
   display: flex;
