@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { getAvailableSpace, getRandomValue } from '../utils'
+
 import { Cell } from '../types'
 
 interface GameContextInterface {
@@ -16,27 +18,15 @@ export const GameContext = React.createContext<GameContextInterface>({
   start: () => {}
 })
 
-function getRandomIndexes(): number[] {
-  const values: number[] = []
-  while (values.length !== 2) {
-    const generated = Math.floor(Math.random() * 16)
-    if (!values.includes(generated)) {
-      values.push(generated)
-    }
-  }
-  return values
-}
-
-function getRandomValue(): number {
-  const random = Math.random()
-  return random < 0.1 ? 4 : 2
-}
-
 function initGame(cells: Cell[]): Cell[] {
   const newCells = [...cells]
-  for (const choose of getRandomIndexes()) {
-    newCells[choose].value = getRandomValue()
-  }
+
+  const availableSpace1 = getAvailableSpace(newCells)
+  newCells[availableSpace1].value = getRandomValue()
+
+  const availableSpace2 = getAvailableSpace(newCells)
+  newCells[availableSpace2].value = getRandomValue()
+
   return newCells
 }
 
@@ -53,9 +43,10 @@ export class GameProvider extends React.Component<{}, GameProviderState> {
 
   render() {
     return (
-      <GameContext.Provider value={{ ...this.state, start: this.start }}>
-        {this.props.children}
-      </GameContext.Provider>
+      <GameContext.Provider
+        value={{ ...this.state, start: this.start }}
+        {...this.props}
+      ></GameContext.Provider>
     )
   }
 }
