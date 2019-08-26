@@ -27,10 +27,15 @@ function getRandomIndexes(): number[] {
   return values
 }
 
-const initGame = (cells: Cell[]): Cell[] => {
+function getRandomValue(): number {
+  const random = Math.random()
+  return random < 0.1 ? 4 : 2
+}
+
+function initGame(cells: Cell[]): Cell[] {
   const newCells = [...cells]
   for (const choose of getRandomIndexes()) {
-    newCells[choose].value = 2
+    newCells[choose].value = getRandomValue()
   }
   return newCells
 }

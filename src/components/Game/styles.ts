@@ -17,7 +17,17 @@ interface CellProps {
 }
 
 function getColor(value: number): string {
-  if (value === 2) return 'cornsilk'
+  if (value === 2) return '#FFEB3B'
+  if (value === 4) return '#CDDC39'
+  if (value === 8) return '#8BC34A'
+  if (value === 16) return '#4CAF50'
+  if (value === 32) return '#009688'
+  if (value === 64) return '#00BCD4'
+  if (value === 128) return '#03A9F4'
+  if (value === 256) return '#2196F3'
+  if (value === 512) return '#3F51B5'
+  if (value === 1024) return '#673AB7'
+  if (value === 2048) return '#9C27B0'
   return '#ccc'
 }
 
