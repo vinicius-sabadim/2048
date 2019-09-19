@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 
 import { GameContext } from '../../contexts/Game'
-import { Cell as CellType } from '../../types'
 
 import { Grid, Cell } from './styles'
 
@@ -17,12 +16,12 @@ interface KeyboardEvent {
 }
 
 const Game: React.FC = () => {
-  const { cells, start } = React.useContext(GameContext)
+  const { cells, start, updateCells } = React.useContext(GameContext)
 
   const pressedKeyAction = ({ key }: KeyboardEvent) => {
     const keyAction = keys[key]
     if (keyAction) {
-      console.log(keyAction)
+      updateCells(keyAction)
     }
   }
 
@@ -39,9 +38,9 @@ const Game: React.FC = () => {
 
   return (
     <Grid>
-      {cells.map((cell: CellType) => (
-        <Cell value={cell.value} key={cell.id}>
-          {cell.value !== 0 ? cell.value : ''}
+      {cells.map((cell, index) => (
+        <Cell value={cell} key={`cell-${index}`}>
+          {cell !== 0 ? cell : ''}
         </Cell>
       ))}
     </Grid>
