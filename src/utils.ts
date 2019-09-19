@@ -15,18 +15,32 @@ export function isGameOver(cells: Cell[]): boolean {
 }
 
 export function mergeCells(cells: Cell[], action: string): Cell[] {
-  const values = getValuesMerged(cells, action)
-  const sortedValues =
-    action === 'right' || action === 'down'
-      ? values.sort()
-      : values.sort().reverse()
+  const cellsMerged = getValuesMerged(cells, action)
+  return shiftCells(cellsMerged, action)
+}
 
-  return cells.map((cell, index) => {
-    return {
-      ...cell,
-      value: sortedValues[index]
+function shiftCells(cells: Cell[], action: string) {
+  const values = cells.map(cell => cell.value)
+  if (action === 'left' || action === 'up') {
+    for (let index = 2; index > 0; index--) {
+      if (values[index] === 0) {
+        values[index] = values[index + 1]
+        values[index + 1] = 0
+      }
     }
-  })
+  } else {
+    for (let index = 1; index < 3; index++) {
+      if (values[index] === 0) {
+        values[index] = values[index - 1]
+        values[index - 1] = 0
+      }
+    }
+  }
+
+  return cells.map((cell, index) => ({
+    ...cell,
+    value: values[index]
+  }))
 }
 
 export function getValuesMerged(cells: Cell[], action: string) {
@@ -46,5 +60,9 @@ export function getValuesMerged(cells: Cell[], action: string) {
       }
     }
   }
-  return values
+
+  return cells.map((cell, index) => ({
+    ...cell,
+    value: values[index]
+  }))
 }
