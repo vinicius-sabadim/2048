@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { getAvailableSpace, getRandomValue, mergeCells } from '../utils'
+import { fillOneCell, interact, isGameOver } from '../utils'
 
 interface GameContextInterface {
   cells: number[]
   start: () => void
-  updateCells: (action: string) => void
+  interact: (action: string) => void
 }
 
 type GameProviderState = {
@@ -15,20 +15,8 @@ type GameProviderState = {
 export const GameContext = React.createContext<GameContextInterface>({
   cells: [],
   start: () => {},
-  updateCells: () => {}
+  interact: () => {}
 })
-
-function initGame(cells: number[]): number[] {
-  const newCells = [...cells]
-
-  const availableSpace1 = getAvailableSpace(newCells)
-  newCells[availableSpace1] = getRandomValue()
-
-  const availableSpace2 = getAvailableSpace(newCells)
-  newCells[availableSpace2] = getRandomValue()
-
-  return newCells
-}
 
 export class GameProvider extends React.Component<{}, GameProviderState> {
   state = {
@@ -36,17 +24,25 @@ export class GameProvider extends React.Component<{}, GameProviderState> {
   }
 
   start = () => {
-    this.setState(({ cells }) => ({
-      cells: initGame(cells)
-    }))
+    const cellsWithOneValue = fillOneCell(this.state.cells)
+    const cellsWithTwoValues = fillOneCell(cellsWithOneValue)
+    this.setState({
+      cells: cellsWithTwoValues
+    })
   }
 
-  updateCells = (action: string) => {
-    console.log(action)
-    const newCells = mergeCells(this.state.cells, action)
-    this.setState({
+  interact = async (action: string) => {
+    const newCells = interact(this.state.cells, action)
+    await this.setState({
       cells: newCells
     })
+
+    if (!isGameOver(newCells)) {
+      const cellsWithOneNewValue = fillOneCell(newCells)
+      this.setState({
+        cells: cellsWithOneNewValue
+      })
+    }
   }
 
   render() {
@@ -55,7 +51,7 @@ export class GameProvider extends React.Component<{}, GameProviderState> {
         value={{
           ...this.state,
           start: this.start,
-          updateCells: this.updateCells
+          interact: this.interact
         }}
         {...this.props}
       ></GameContext.Provider>

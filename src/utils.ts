@@ -16,6 +16,15 @@ export function isGameOver(cells: number[]): boolean {
   return cells.every(cell => cell !== 0)
 }
 
+export function fillOneCell(cells: number[]): number[] {
+  const newCells = [...cells]
+
+  const availableSpace = getAvailableSpace(newCells)
+  newCells[availableSpace] = getRandomValue()
+
+  return newCells
+}
+
 export function interact(cells: number[], action: string): number[] {
   const whatIsTheKindOfAction =
     action === 'right' || action === 'left' ? 'row' : 'column'
