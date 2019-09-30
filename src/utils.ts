@@ -1,4 +1,4 @@
-const interestedCells: { [key: string]: number[][] } = {
+const sections: { [key: string]: number[][] } = {
   row: [[0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15]],
   column: [[0, 4, 8, 12], [1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15]]
 }
@@ -16,58 +16,72 @@ export function isGameOver(cells: number[]): boolean {
   return cells.every(cell => cell !== 0)
 }
 
-export function shiftCells(cells: number[], action: string): number[] {
-  const kindOfAction =
+export function interact(cells: number[], action: string): number[] {
+  const whatIsTheKindOfAction =
     action === 'right' || action === 'left' ? 'row' : 'column'
-  interestedCells[kindOfAction].forEach(activeKind => {
-    activeKind.forEach(item => {
-      console.log(item)
-    })
-    const result = getValuesMerged(cells, action)
-    console.log(result)
-  })
+
+  // The cells has a length of 16, but we are interested in do the merger
+  // using 4 items every time, depending of the action
+  // it can be 4 in a row or 4 in a column
+  for (const interestedSection of sections[whatIsTheKindOfAction]) {
+    const valuesOnSection: number[] = []
+
+    for (const cellIndex of interestedSection) {
+      valuesOnSection.push(cells[cellIndex])
+    }
+
+    const sectionWithValuesOnBegin = removeZerosFromInside(valuesOnSection)
+    const sectionWithValuesMerged = getValuesMerged(sectionWithValuesOnBegin)
+
+    const newValues =
+      action === 'right' || action === 'down'
+        ? shiftToEnd(sectionWithValuesMerged)
+        : sectionWithValuesMerged
+
+    let index = 0
+    for (const cellIndex of interestedSection) {
+      cells[cellIndex] = newValues[index]
+      index += 1
+    }
+  }
+
   return cells
 }
 
-export function mergeCells(cells: number[], action: string): number[] {
-  const cellsMerged = getValuesMerged(cells, action)
-  return shiftCells(cellsMerged, action)
-}
+function removeZerosFromInside(section: number[]): number[] {
+  const values = [0, 0, 0, 0]
+  let index = 0
 
-// function shiftCells(values: number[], action: string) {
-//   if (action === 'left' || action === 'up') {
-//     for (let index = 2; index > 0; index--) {
-//       if (values[index] === 0) {
-//         values[index] = values[index + 1]
-//         values[index + 1] = 0
-//       }
-//     }
-//   } else {
-//     for (let index = 1; index < 3; index++) {
-//       if (values[index] === 0) {
-//         values[index] = values[index - 1]
-//         values[index - 1] = 0
-//       }
-//     }
-//   }
-//   return values
-// }
-
-export function getValuesMerged(values: number[], action: string) {
-  if (action === 'right' || action === 'down') {
-    for (let index = 3; index > 0; index--) {
-      if (values[index] === values[index - 1]) {
-        values[index] = values[index] * 2
-        values[index - 1] = 0
-      }
-    }
-  } else {
-    for (let index = 0; index < 3; index++) {
-      if (values[index] === values[index + 1]) {
-        values[index] = values[index] * 2
-        values[index + 1] = 0
-      }
+  for (const value of section) {
+    if (value !== 0) {
+      values[index] = value
+      index += 1
     }
   }
+
+  return values
+}
+
+function getValuesMerged(values: number[]) {
+  for (let index = 0; index < 3; index++) {
+    if (values[index] === values[index + 1]) {
+      values[index] = values[index] * 2
+      values[index + 1] = 0
+    }
+  }
+  return removeZerosFromInside(values)
+}
+
+function shiftToEnd(section: number[]) {
+  const values = [0, 0, 0, 0]
+  let index = 3
+
+  for (const value of section.reverse()) {
+    if (value !== 0) {
+      values[index] = value
+      index -= 1
+    }
+  }
+
   return values
 }

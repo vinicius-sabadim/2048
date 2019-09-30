@@ -1,4 +1,4 @@
-import { isGameOver, shiftCells } from './utils'
+import { isGameOver, interact } from './utils'
 
 describe('utils methods', () => {
   test('is game over when there are no available spaces', () => {
@@ -11,50 +11,153 @@ describe('utils methods', () => {
     expect(isGameOver(cells)).toBeFalsy()
   })
 
-  describe('shift cells', () => {
-    test.only('when there are zeros in the middle', () => {
-      const cells = [2, 0, 0, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
-      const shift = [0, 0, 2, 2, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
-      const result = shiftCells(cells, 'right')
-      console.log(result)
-      expect(result).toEqual(shift)
+  describe('interact', () => {
+    describe('action "right"', () => {
+      test('there are zeros in the middle', () => {
+        const cells = [2, 0, 0, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 0, 0, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'right')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the beginning', () => {
+        const cells = [0, 0, 2, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 0, 0, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'right')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the end', () => {
+        const cells = [2, 0, 2, 0, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 0, 0, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'right')
+        expect(result).toEqual(merged)
+      })
+
+      test('different values', () => {
+        const cells = [2, 0, 8, 4, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 2, 8, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'right')
+        expect(result).toEqual(merged)
+      })
+
+      test('double pair', () => {
+        const cells = [2, 2, 2, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 0, 4, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'right')
+        expect(result).toEqual(merged)
+      })
+    })
+
+    describe('action "left"', () => {
+      test('there are zeros in the middle', () => {
+        const cells = [2, 0, 0, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'left')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the beginning', () => {
+        const cells = [0, 2, 0, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'left')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the end', () => {
+        const cells = [2, 0, 2, 0, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'left')
+        expect(result).toEqual(merged)
+      })
+
+      test('different values', () => {
+        const cells = [2, 0, 8, 4, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [2, 8, 4, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'left')
+        expect(result).toEqual(merged)
+      })
+
+      test('double pair', () => {
+        const cells = [2, 2, 2, 2, 4, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [4, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'left')
+        expect(result).toEqual(merged)
+      })
+    })
+
+    describe('action "up"', () => {
+      test('there are zeros in the middle', () => {
+        const cells = [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'up')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the beginning', () => {
+        const cells = [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'up')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the end', () => {
+        const cells = [2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'up')
+        expect(result).toEqual(merged)
+      })
+
+      test('different values', () => {
+        const cells = [2, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [2, 0, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'up')
+        expect(result).toEqual(merged)
+      })
+
+      test('double pair', () => {
+        const cells = [2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [4, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        const result = interact(cells, 'up')
+        expect(result).toEqual(merged)
+      })
+    })
+
+    describe('action "down"', () => {
+      test('there are zeros in the middle', () => {
+        const cells = [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0]
+        const result = interact(cells, 'down')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the beginning', () => {
+        const cells = [0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0]
+        const result = interact(cells, 'down')
+        expect(result).toEqual(merged)
+      })
+
+      test('there are zeros in the end', () => {
+        const cells = [2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+        const merged = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0]
+        const result = interact(cells, 'down')
+        expect(result).toEqual(merged)
+      })
+
+      test('different values', () => {
+        const cells = [2, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [0, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0]
+        const result = interact(cells, 'down')
+        expect(result).toEqual(merged)
+      })
+
+      test('double pair', () => {
+        const cells = [2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0]
+        const merged = [0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 4, 0, 0, 0]
+        const result = interact(cells, 'down')
+        expect(result).toEqual(merged)
+      })
     })
   })
-
-  // describe('merging cells', () => {
-  //   test.only('should merge when there are 0 in the middle', () => {
-  //     const cells = [2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const merged = [0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const result = mergeCells(cells, 'right')
-  //     expect(result).toEqual(merged)
-  //   })
-
-  //   test('should merge when there are 0 in the end', () => {
-  //     const cells = [2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const merged = [0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const result = mergeCells(cells, 'right')
-  //     expect(result).toEqual(merged)
-  //   })
-
-  //   test('should merge when there are 0 in the beginning', () => {
-  //     const cells = [0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const merged = [0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const result = mergeCells(cells, 'right')
-  //     expect(result).toEqual(merged)
-  //   })
-
-  //   test('should merge when there are 1 pair and no zeros', () => {
-  //     const cells = [2, 2, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const merged = [0, 4, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const result = mergeCells(cells, 'right')
-  //     expect(result).toEqual(merged)
-  //   })
-
-  //   test('should merge when there are 2 pairs', () => {
-  //     const cells = [2, 2, 4, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const merged = [0, 0, 4, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  //     const result = mergeCells(cells, 'right')
-  //     expect(result).toEqual(merged)
-  //   })
-  // })
 })
