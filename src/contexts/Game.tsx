@@ -1,50 +1,58 @@
 import React from 'react'
 
-import { getAvailableSpace, getRandomValue } from '../utils'
-
-import { Cell } from '../types'
+import { fillOneCell, interact, isGameOver } from '../utils'
 
 interface GameContextInterface {
-  cells: Cell[]
+  cells: number[]
   start: () => void
+  interact: (action: string) => void
 }
 
 type GameProviderState = {
-  cells: Cell[]
+  cells: number[]
 }
 
 export const GameContext = React.createContext<GameContextInterface>({
   cells: [],
-  start: () => {}
+  start: () => {},
+  interact: () => {}
 })
-
-function initGame(cells: Cell[]): Cell[] {
-  const newCells = [...cells]
-
-  const availableSpace1 = getAvailableSpace(newCells)
-  newCells[availableSpace1].value = getRandomValue()
-
-  const availableSpace2 = getAvailableSpace(newCells)
-  newCells[availableSpace2].value = getRandomValue()
-
-  return newCells
-}
 
 export class GameProvider extends React.Component<{}, GameProviderState> {
   state = {
-    cells: [...Array(16).keys()].map(cell => ({ id: cell, value: 0 }))
+    cells: Array(16).fill(0)
   }
 
   start = () => {
-    this.setState(({ cells }) => ({
-      cells: initGame(cells)
-    }))
+    const cellsWithOneValue = fillOneCell(this.state.cells)
+    const cellsWithTwoValues = fillOneCell(cellsWithOneValue)
+    this.setState({
+      cells: cellsWithTwoValues
+    })
+  }
+
+  interact = async (action: string) => {
+    const newCells = interact(this.state.cells, action)
+    await this.setState({
+      cells: newCells
+    })
+
+    if (!isGameOver(newCells)) {
+      const cellsWithOneNewValue = fillOneCell(newCells)
+      this.setState({
+        cells: cellsWithOneNewValue
+      })
+    }
   }
 
   render() {
     return (
       <GameContext.Provider
-        value={{ ...this.state, start: this.start }}
+        value={{
+          ...this.state,
+          start: this.start,
+          interact: this.interact
+        }}
         {...this.props}
       ></GameContext.Provider>
     )
