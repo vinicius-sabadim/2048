@@ -4,8 +4,12 @@ const sections: { [key: string]: number[][] } = {
 }
 
 export function getAvailableSpace(cells: number[]): number {
-  const availableSpaces = cells.filter(cell => cell === 0)
-  return Math.floor(Math.random() * availableSpaces.length)
+  const availableSpaces: number[] = []
+  cells.forEach((cell, index) => {
+    if (cell === 0) availableSpaces.push(index)
+  })
+  const randomIndex = Math.floor(Math.random() * availableSpaces.length)
+  return availableSpaces[randomIndex]
 }
 
 export function getRandomValue(random = Math.random()): number {
@@ -26,6 +30,7 @@ export function fillOneCell(cells: number[]): number[] {
 }
 
 export function interact(cells: number[], action: string): number[] {
+  const newCells = [...cells]
   const whatIsTheKindOfAction =
     action === 'right' || action === 'left' ? 'row' : 'column'
 
@@ -49,12 +54,12 @@ export function interact(cells: number[], action: string): number[] {
 
     let index = 0
     for (const cellIndex of interestedSection) {
-      cells[cellIndex] = newValues[index]
+      newCells[cellIndex] = newValues[index]
       index += 1
     }
   }
 
-  return cells
+  return newCells
 }
 
 function removeZerosFromInside(section: number[]): number[] {

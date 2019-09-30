@@ -33,6 +33,10 @@ export class GameProvider extends React.Component<{}, GameProviderState> {
 
   interact = async (action: string) => {
     const newCells = interact(this.state.cells, action)
+
+    // The updated version is the same as the old one, so we dont need a new render
+    if (JSON.stringify(this.state.cells) === JSON.stringify(newCells)) return
+
     await this.setState({
       cells: newCells
     })
